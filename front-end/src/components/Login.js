@@ -12,7 +12,7 @@ import {
   Button,
   Heading,
   Text,
-  useColorModeValue,
+  createStyles,
 } from "@chakra-ui/react";
 import { Alert, AlertIcon } from "@chakra-ui/react";
 
@@ -49,7 +49,12 @@ const Login = () => {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      bg={useColorModeValue("gray.50", "gray.800")}
+      sx={createStyles({
+        bg: {
+          light: "gray.50",
+          dark: "gray.800",
+        },
+      })}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -60,7 +65,12 @@ const Login = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          bg={useColorModeValue("white", "gray.700")}
+          sx={createStyles({
+            bg: {
+              light: "white",
+              dark: "gray.700",
+            },
+          })}
           boxShadow={"lg"}
           p={8}
         >
