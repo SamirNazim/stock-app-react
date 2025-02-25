@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Flex,
-  Icon,
-  useColorModeValue,
-  Link,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Flex, Icon, createStyles, Link, Text } from "@chakra-ui/react";
 import {
   FiHome,
   FiSettings,
@@ -103,9 +96,17 @@ const SidebarWithHeader = () => {
     <div>
       <Box
         transition="3s ease"
-        bg={useColorModeValue("white", "gray.900")}
+        sx={createStyles({
+          bg: {
+            light: "white",
+            dark: "gray.900",
+          },
+          borderRightColor: {
+            light: "gray.200",
+            dark: "gray.700",
+          },
+        })}
         borderRight="1px"
-        borderRightColor={useColorModeValue("gray.200", "gray.700")}
         w={{ base: "full", md: 60 }}
         pos="fixed"
         h="full"
