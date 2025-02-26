@@ -1,13 +1,7 @@
 import React, { useState } from "react";
-import { Tr, Td, Link } from "@chakra-ui/react";
-import { Stat, StatNumber, StatHelpText, StatArrow } from "@chakra-ui/react";
-import {
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-} from "@chakra-ui/react";
+import { Table, Link } from "@chakra-ui/react";
+import { Stat, StatHelpText } from "@chakra-ui/react";
+import { NumberInput } from "@chakra-ui/react";
 
 const TickerEditableRow = (props) => {
   const { data, saveTicker, deleteTicker } = props;
@@ -15,46 +9,46 @@ const TickerEditableRow = (props) => {
   const [avgPrice, setAvgPrice] = useState(data?.avgprice);
 
   return (
-    <Tr>
-      <Td>
+    <Table>
+      <Table.Row>
         <Link href={`/company/${data.ticker}`}>{data?.ticker}</Link>
-      </Td>
+      </Table.Row>
 
-      <Td>
+      <Table.Row>
         <NumberInput size="xs" defaultValue={data?.qty}>
-          <NumberInputField
+          <NumberInput.Input
             value={qty}
             onChange={(evt) => {
               setQty(evt.target.value);
             }}
           />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
+          <NumberInput.Control>
+            <NumberInput.IncrementTrigger />
+            <NumberInput.DecrementTrigger />
+          </NumberInput.Control>
         </NumberInput>
-      </Td>
+      </Table.Row>
 
-      <Td>
+      <Table.Row>
         <NumberInput size="xs" defaultValue={data?.avgprice}>
-          <NumberInputField
+          <NumberInput.Input
             value={avgPrice}
             onChange={(evt) => setAvgPrice(evt.target.value)}
           />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
+          <NumberInput.Control>
+            <NumberInput.IncrementTrigger />
+            <NumberInput.DecrementTrigger />
+          </NumberInput.Control>
         </NumberInput>
-      </Td>
-      <Td>{data?.currentprice}</Td>
-      <Td>
+      </Table.Row>
+      <Table.Row>{data?.currentprice}</Table.Row>
+      <Table.Row>
         <Stat>
-          <StatNumber>
+          <Stat.ValueText>
             ${(data?.currentprice - data?.previousclose).toFixed(2)}
-          </StatNumber>
+          </Stat.ValueText>
           <StatHelpText>
-            <StatArrow
+            <Stat.UpIndicator
               type={
                 data?.currentprice - data?.previousclose > 0
                   ? "increase"
@@ -69,15 +63,15 @@ const TickerEditableRow = (props) => {
             %
           </StatHelpText>
         </Stat>
-      </Td>
+      </Table.Row>
 
-      <Td>
+      <Table.Row>
         <Stat>
-          <StatNumber>
+          <Stat.ValueText>
             ${((data?.currentprice - data?.avgprice) * data?.qty).toFixed(2)}
-          </StatNumber>
+          </Stat.ValueText>
           <StatHelpText>
-            <StatArrow
+            <Stat.UpIndicator
               type={
                 data?.currentprice - data?.avgprice > 0
                   ? "increase"
@@ -91,11 +85,11 @@ const TickerEditableRow = (props) => {
             %
           </StatHelpText>
         </Stat>
-      </Td>
+      </Table.Row>
 
-      <Td>${data?.avgprice * data?.qty}</Td>
+      <Table.Row>${data?.avgprice * data?.qty}</Table.Row>
 
-      <Td>
+      <Table.Row>
         <button
           type="button"
           onClick={(event) => {
@@ -104,17 +98,17 @@ const TickerEditableRow = (props) => {
         >
           Save
         </button>
-      </Td>
+      </Table.Row>
 
-      <Td>
+      <Table.Row>
         <button
           type="button"
           onClick={(event) => deleteTicker(event, data?._id)}
         >
           Delete
         </button>
-      </Td>
-    </Tr>
+      </Table.Row>
+    </Table>
   );
 };
 

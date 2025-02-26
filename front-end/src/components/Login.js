@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Box,
-  FormControl,
-  FormLabel,
+  Field,
   Input,
   Checkbox,
   Stack,
@@ -12,13 +11,14 @@ import {
   Button,
   Heading,
   Text,
-  createStyles,
 } from "@chakra-ui/react";
-import { Alert, AlertIcon } from "@chakra-ui/react";
-
+import { Alert } from "@chakra-ui/react";
 import axios from "axios";
+import { useTheme } from "next-themes";
 
 const Login = () => {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const history = useNavigate();
@@ -49,12 +49,7 @@ const Login = () => {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      sx={createStyles({
-        bg: {
-          light: "gray.50",
-          dark: "gray.800",
-        },
-      })}
+      bg={isDarkMode ? "gray.800" : "gray.50"}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -65,31 +60,25 @@ const Login = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          sx={createStyles({
-            bg: {
-              light: "white",
-              dark: "gray.700",
-            },
-          })}
+          bg={isDarkMode ? "gray.700" : "white"}
           boxShadow={"lg"}
           p={8}
         >
           <Stack spacing={4}>
             {auth.success ? null : (
               <Alert status="error">
-                <AlertIcon />
+                <Alert.Indicator />
                 {auth.message}
               </Alert>
             )}
-            <FormControl id="username">
+            <Field id="username" label="username">
               {error?.success === false && (
                 <Alert status="error">
-                  <AlertIcon />
+                  <Alert.Indicator />
                   {error?.message}
                 </Alert>
               )}
 
-              <FormLabel>username</FormLabel>
               <Input
                 type="username"
                 value={username}
@@ -97,9 +86,8 @@ const Login = () => {
                   setUsername(evt.target.value);
                 }}
               />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
+            </Field>
+            <Field id="password" label="password">
               <Input
                 type="password"
                 value={password}
@@ -107,7 +95,7 @@ const Login = () => {
                   setPassword(evt.target.value);
                 }}
               />
-            </FormControl>
+            </Field>
             <Stack spacing={10}>
               <Stack
                 direction={{ base: "column", sm: "row" }}

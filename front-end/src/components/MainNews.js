@@ -10,7 +10,7 @@ const MainNews = (prop) => {
   const [readMore, setReadMore] = useState(3);
 
   useEffect(() => {
-    const URL = `https://newsapi.org/v2/everything?q=${prop.ticker}&apiKey=KEY`;
+    const URL = `https://newsapi.org/v2/everything?q=${prop.ticker}&apiKey=TOKEN`;
 
     fetch(URL)
       .then((response) => response.json())

@@ -1,24 +1,24 @@
 import React from "react";
-import { Tr, Td, Link } from "@chakra-ui/react";
-import { Stat, StatNumber, StatHelpText, StatArrow } from "@chakra-ui/react";
+import { Table, Link } from "@chakra-ui/react";
+import { Stat, StatHelpText } from "@chakra-ui/react";
 
 const TickerEditableRow = (props) => {
   const { data, handleEditClick } = props;
   return (
-    <Tr>
-      <Td>
+    <Table>
+      <Table.Row>
         <Link href={`/company/${data.ticker}`}>{data?.ticker}</Link>
-      </Td>
-      <Td>{data?.qty}</Td>
-      <Td>{data?.avgprice}</Td>
-      <Td>{data?.currentprice}</Td>
-      <Td>
+      </Table.Row>
+      <Table.Row>{data?.qty}</Table.Row>
+      <Table.Row>{data?.avgprice}</Table.Row>
+      <Table.Row>{data?.currentprice}</Table.Row>
+      <Table.Row>
         <Stat>
-          <StatNumber>
+          <Stat.ValueText>
             ${(data?.currentprice - data?.previousclose).toFixed(2)}
-          </StatNumber>
+          </Stat.ValueText>
           <StatHelpText>
-            <StatArrow
+            <Stat.UpIndicator
               type={
                 data?.currentprice - data?.previousclose > 0
                   ? "increase"
@@ -33,15 +33,15 @@ const TickerEditableRow = (props) => {
             %
           </StatHelpText>
         </Stat>
-      </Td>
+      </Table.Row>
 
-      <Td>
+      <Table.Row>
         <Stat>
-          <StatNumber>
+          <Stat.ValueText>
             ${((data?.currentprice - data?.avgprice) * data?.qty).toFixed(2)}
-          </StatNumber>
+          </Stat.ValueText>
           <StatHelpText>
-            <StatArrow
+            <Stat.UpIndicator
               type={
                 data?.currentprice - data?.avgprice > 0
                   ? "increase"
@@ -55,9 +55,9 @@ const TickerEditableRow = (props) => {
             %
           </StatHelpText>
         </Stat>
-      </Td>
-      <Td>${(data?.currentprice * data?.qty).toFixed(2)}</Td>
-      <Td>
+      </Table.Row>
+      <Table.Row>${(data?.currentprice * data?.qty).toFixed(2)}</Table.Row>
+      <Table.Row>
         <button
           type="button"
           onClick={(event) => {
@@ -66,8 +66,8 @@ const TickerEditableRow = (props) => {
         >
           Edit
         </button>
-      </Td>
-    </Tr>
+      </Table.Row>
+    </Table>
   );
 };
 
