@@ -3,22 +3,20 @@ import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Box,
-  FormControl,
-  FormLabel,
+  Field,
   Input,
   Stack,
-  InputRightElement,
-  InputGroup,
   Link,
   Button,
   Heading,
   Text,
-  createStyles,
 } from "@chakra-ui/react";
-import { Alert, AlertIcon } from "@chakra-ui/react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { Alert } from "@chakra-ui/react";
+import { useTheme } from "next-themes";
 
 const Register = () => {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
   const [userData, setUserData] = useState([]);
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
@@ -68,12 +66,7 @@ const Register = () => {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      sx={createStyles({
-        bg: {
-          light: "gray.50",
-          dark: "gray.800",
-        },
-      })}
+      bg={isDarkMode ? "gray.800" : "gray.50"}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -86,24 +79,18 @@ const Register = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          sx={createStyles({
-            bg: {
-              light: "white",
-              dark: "gray.700",
-            },
-          })}
+          bg={isDarkMode ? "gray.800" : "gray.50"}
           boxShadow={"lg"}
           p={8}
         >
           <Stack spacing={4}>
             {error?.message === "" ? null : (
               <Alert status="error">
-                <AlertIcon />
+                <Alert.Indicator />
                 {error?.message}
               </Alert>
             )}
-            <FormControl id="username" isRequired>
-              <FormLabel>Username</FormLabel>
+            <Field id="username" label="Username" isRequired>
               <Input
                 type="text"
                 value={username}
@@ -112,10 +99,9 @@ const Register = () => {
                   console.log(evt.target.value);
                 }}
               />
-            </FormControl>
+            </Field>
 
-            <FormControl id="email" isRequired>
-              <FormLabel>Email address</FormLabel>
+            <Field id="email" label="Email address" isRequired>
               <Input
                 type="email"
                 value={email}
@@ -123,31 +109,22 @@ const Register = () => {
                   setEmail(evt.target.value);
                 }}
               />
-            </FormControl>
+            </Field>
 
-            <FormControl id="password" isRequired>
-              <FormLabel>Password</FormLabel>
-              <InputGroup>
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(evt) => {
-                    setPassword(evt.target.value);
-                  }}
-                />
-                <InputRightElement h={"full"}>
-                  <Button
-                    variant={"ghost"}
-                    onClick={() =>
-                      setShowPassword((showPassword) => !showPassword)
-                    }
-                  >
-                    {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                  </Button>
-                </InputRightElement>
-              </InputGroup>
+            <Field id="password" label="Password" isRequired>
+              <Input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(evt) => {
+                  setPassword(evt.target.value);
+                }}
+              />
+              <Button
+                variant={"ghost"}
+                onClick={() => setShowPassword((showPassword) => !showPassword)}
+              ></Button>
               <p>Password must be a minimum 6 characters long.</p>
-            </FormControl>
+            </Field>
             <Stack spacing={10} pt={2}>
               <Button
                 loadingText="Submitting"

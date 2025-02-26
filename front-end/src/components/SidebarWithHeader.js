@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Icon, createStyles, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Link, Text } from "@chakra-ui/react";
 import {
   FiHome,
   FiSettings,
@@ -16,14 +16,16 @@ import {
   HStack,
   VStack,
   Menu,
-  MenuButton,
-  MenuDivider,
   MenuItem,
-  MenuList,
+  MenuContent,
+  MenuTrigger,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useTheme } from "next-themes";
 
 const SidebarWithHeader = () => {
+  const { theme } = useTheme();
+  const isDarkMode = theme === "dark";
   const [user, setUser] = useState([]);
 
   useEffect(() => {
@@ -96,16 +98,7 @@ const SidebarWithHeader = () => {
     <div>
       <Box
         transition="3s ease"
-        sx={createStyles({
-          bg: {
-            light: "white",
-            dark: "gray.900",
-          },
-          borderRightColor: {
-            light: "gray.200",
-            dark: "gray.700",
-          },
-        })}
+        bg={isDarkMode ? "gray.800" : "gray.50"}
         borderRight="1px"
         w={{ base: "full", md: 60 }}
         pos="fixed"
@@ -145,7 +138,8 @@ const SidebarWithHeader = () => {
             />
             <Flex>
               <Menu>
-                <MenuButton
+                <MenuTrigger
+                  asChild
                   py={2}
                   transition="all 0.3s"
                   _focus={{ boxShadow: "none" }}
@@ -167,14 +161,13 @@ const SidebarWithHeader = () => {
                       <FiChevronDown />
                     </Box>
                   </HStack>
-                </MenuButton>
-                <MenuList>
+                </MenuTrigger>
+                <MenuContent>
                   <MenuItem>Profile</MenuItem>
                   <MenuItem>Settings</MenuItem>
                   <MenuItem>Billing</MenuItem>
-                  <MenuDivider />
                   <MenuItem>Sign out</MenuItem>
-                </MenuList>
+                </MenuContent>
               </Menu>
             </Flex>
           </HStack>

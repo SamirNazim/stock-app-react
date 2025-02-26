@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Tbody,
-  Tr,
-  Td,
-  TableCaption,
-  TableContainer,
-} from "@chakra-ui/react";
+import { Table, TableCaption } from "@chakra-ui/react";
 import { Heading } from "@chakra-ui/react";
 import { getTicker } from "../axios/getTickerData.js";
 const TickerSummary = (props) => {
@@ -31,104 +24,104 @@ const TickerSummary = (props) => {
   }
   return (
     <div>
-      <TableContainer>
+      <Table.Root>
         <Table variant="simple" style={{ display: "flex" }}>
           <TableCaption>
             {ticker.toUpperCase()}'s Financial Summary
           </TableCaption>
           <div className="ticker-summary-left-table">
-            <Tbody>
-              <Tr>
-                <Td>Previous Close</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Previous Close</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {tickerSummary?.previousClose}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
 
-            <Tbody>
-              <Tr>
-                <Td>Open</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Open</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {tickerSummary?.open}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
 
-            <Tbody>
-              <Tr>
-                <Td>Volume</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Volume</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {makeFriendly(tickerSummary?.volume)}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
 
-            <Tbody>
-              <Tr>
-                <Td>Day High</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Day High</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {tickerSummary?.dayHigh}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
           </div>
 
           <div className="ticker-summary-right-table">
-            <Tbody>
-              <Tr>
-                <Td>Market Cap</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Market Cap</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {makeFriendly(tickerSummary?.marketCap)}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
 
-            <Tbody>
-              <Tr>
-                <Td>PE Ratio</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>PE Ratio</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {parseInt(tickerSummary?.trailingPE).toFixed(2)}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
 
-            <Tbody>
-              <Tr>
-                <Td>Avg. Volume</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Avg. Volume</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {makeFriendly(tickerSummary?.averageVolume)}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
 
-            <Tbody>
-              <Tr>
-                <Td>Day Low</Td>
-                <Td>
+            <Table.Body>
+              <Table>
+                <Table.Row>Day Low</Table.Row>
+                <Table.Row>
                   <Heading as="h5" size="sm">
                     {tickerSummary?.dayLow}
                   </Heading>
-                </Td>
-              </Tr>
-            </Tbody>
+                </Table.Row>
+              </Table>
+            </Table.Body>
           </div>
         </Table>
-      </TableContainer>
+      </Table.Root>
     </div>
   );
 };

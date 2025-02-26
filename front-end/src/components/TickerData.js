@@ -3,14 +3,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
-import {
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatArrow,
-  StatGroup,
-} from "@chakra-ui/react";
+import { Stat, StatLabel, StatHelpText, StatGroup } from "@chakra-ui/react";
 
 const TickerData = () => {
   const { ticker } = useParams();
@@ -30,12 +23,12 @@ const TickerData = () => {
       <StatGroup>
         <Stat>
           <StatLabel>Current Price</StatLabel>
-          <StatNumber>
+          <Stat.ValueText>
             {tickerData.financialData?.currentPrice}{" "}
             {tickerData.financialData?.financialCurrency}
-          </StatNumber>
+          </Stat.ValueText>
           <StatHelpText>
-            <StatArrow
+            <Stat.UpIndicator
               type={
                 tickerData.financialData?.currentPrice -
                   tickerData.summaryDetail?.previousClose >

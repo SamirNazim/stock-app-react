@@ -118,7 +118,7 @@ const TickerPriceChart = () => {
             <StatLabel>Timeline </StatLabel>
             <StatNumber>{timelineGain.toFixed(2)}</StatNumber>
             <StatHelpText>
-              <StatArrow type={timelineGain > 0 ? "increase" : "decrease"} />
+              <Stat.UpIndicator type={timelineGain > 0 ? "increase" : "decrease"} />
               {(
                 (timelineGain /
                   chartData?.data[Object.keys(chartData["data"]).length - 1]

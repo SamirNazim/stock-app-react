@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import TickerEarningsSummary from "../components/TickerEarningsSummary.js";
 import TickerSummary from "../components/TickerSummary.js";
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+import { Tabs } from "@chakra-ui/react";
 
 axios.defaults.withCredentials = true;
 
@@ -37,26 +37,24 @@ const TickerDataPage = () => {
       <TickerPriceChart />
       <div className="rowC">
         <Tabs variant="soft-rounded" colorScheme="green">
-          <TabList>
-            <Tab>Summary</Tab>
-            <Tab>Earnings (EPS)</Tab>
-            <Tab>Reddit News</Tab>
-            <Tab>Main News</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <TickerSummary ticker={ticker} />
-            </TabPanel>
-            <TabPanel>
-              <TickerEarningsSummary ticker={ticker} />
-            </TabPanel>
-            <TabPanel>
-              <RedditNews ticker={ticker} />
-            </TabPanel>
-            <TabPanel>
-              <MainNews ticker={ticker} />
-            </TabPanel>
-          </TabPanels>
+          <Tabs.List>
+            <Tabs>Summary</Tabs>
+            <Tabs>Earnings (EPS)</Tabs>
+            <Tabs>Reddit News</Tabs>
+            <Tabs>Main News</Tabs>
+          </Tabs.List>
+          <Tabs.Content>
+            <TickerSummary ticker={ticker} />
+          </Tabs.Content>
+          <Tabs.Content>
+            <TickerEarningsSummary ticker={ticker} />
+          </Tabs.Content>
+          <Tabs.Content>
+            <RedditNews ticker={ticker} />
+          </Tabs.Content>
+          <Tabs.Content>
+            <MainNews ticker={ticker} />
+          </Tabs.Content>
         </Tabs>
       </div>
     </div>

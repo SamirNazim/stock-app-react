@@ -1,22 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import {
-  Input,
-  Stack,
-  InputGroup,
-  InputLeftAddon,
-  Button,
-} from "@chakra-ui/react";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  TableCaption,
-  TableContainer,
-} from "@chakra-ui/react";
-
+import { Input, Stack, InputAddon, Button } from "@chakra-ui/react";
+import { Table, TableCaption } from "@chakra-ui/react";
 import axios from "axios";
 import TickerReadOnlyRow from "./TickerReadOnlyRow";
 import TickerEditableRow from "./TickerEditableRow";
@@ -80,39 +65,33 @@ const TickerTable = (props) => {
   return (
     <>
       <Stack spacing={3}>
-        <InputGroup>
-          <InputLeftAddon children="Symbol" />
-          <Input
-            type="text"
-            placeholder="Stock Ticker"
-            value={symbol}
-            onChange={(evt) => {
-              setSymbol(evt.target.value.toUpperCase());
-            }}
-          />
-        </InputGroup>
-        <InputGroup>
-          <InputLeftAddon children="Quantity" />
-          <Input
-            type="number"
-            placeholder="Number of Shares"
-            value={qty}
-            onChange={(evt) => {
-              setQty(evt.target.value);
-            }}
-          />
-        </InputGroup>
-        <InputGroup>
-          <InputLeftAddon children="AvgPrice" />
-          <Input
-            type="number"
-            placeholder="Average Price"
-            value={avgPrice}
-            onChange={(evt) => {
-              setAvgPrice(evt.target.value);
-            }}
-          />
-        </InputGroup>
+        <InputAddon children="Symbol" />
+        <Input
+          type="text"
+          placeholder="Stock Ticker"
+          value={symbol}
+          onChange={(evt) => {
+            setSymbol(evt.target.value.toUpperCase());
+          }}
+        />
+        <InputAddon children="Quantity" />
+        <Input
+          type="number"
+          placeholder="Number of Shares"
+          value={qty}
+          onChange={(evt) => {
+            setQty(evt.target.value);
+          }}
+        />
+        <InputAddon children="AvgPrice" />
+        <Input
+          type="number"
+          placeholder="Average Price"
+          value={avgPrice}
+          onChange={(evt) => {
+            setAvgPrice(evt.target.value);
+          }}
+        />
         <Button colorScheme="teal" size="md" onClick={setUserTickerTable}>
           Add To Portfolio
         </Button>
@@ -121,21 +100,19 @@ const TickerTable = (props) => {
       {update?.status === false ? <h1>{update?.message}</h1> : ""}
 
       {user?.username && (
-        <TableContainer>
+        <Table.Root>
           <Table variant="striped" colorScheme="teal">
             <TableCaption>{user?.username}'s Portfolio Holdings</TableCaption>
-            <Thead>
-              <Tr>
-                <Th>Symbol</Th>
-                <Th>Quantity</Th>
-                <Th>Average Price per Share</Th>
-                <Th>Current Price</Th>
-                <Th>Daily Gain</Th>
-                <Th>Total Gain</Th>
-                <Th>Market Value</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
+            <Table.Row>
+              <Table.ColumnHeader>Symbol</Table.ColumnHeader>
+              <Table.ColumnHeader>Quantity</Table.ColumnHeader>
+              <Table.ColumnHeader>Average Price per Share</Table.ColumnHeader>
+              <Table.ColumnHeader>Current Price</Table.ColumnHeader>
+              <Table.ColumnHeader>Daily Gain</Table.ColumnHeader>
+              <Table.ColumnHeader>Total Gain</Table.ColumnHeader>
+              <Table.ColumnHeader>Market Value</Table.ColumnHeader>
+            </Table.Row>
+            <Table.Body>
               {user?.data.map((data) => (
                 <>
                   {editRowId === data._id ? (
@@ -154,9 +131,9 @@ const TickerTable = (props) => {
                   )}
                 </>
               ))}
-            </Tbody>
+            </Table.Body>
           </Table>
-        </TableContainer>
+        </Table.Root>
       )}
     </>
   );
