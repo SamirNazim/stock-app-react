@@ -3,24 +3,19 @@ import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Box,
-  Field,
   Input,
-  Checkbox,
   Stack,
   Link,
   Button,
   Heading,
-  Text,
+  Text
 } from "@chakra-ui/react";
-import { Alert } from "@chakra-ui/react";
 import axios from "axios";
-import { useTheme } from "next-themes";
 
 const Login = () => {
-  const { theme } = useTheme();
-  const isDarkMode = theme === "dark";
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const history = useNavigate();
   const [auth, setAuth] = useState({
     message: "",
@@ -29,19 +24,17 @@ const Login = () => {
   const [error, setError] = useState([]);
 
   const login = async () => {
-    setError(false);
-    const res = await axios
-      .post("http://localhost:8080/api/login", {
+    try {
+      const res = await axios.post("http://localhost:8080/api/login", {
         username: username,
         password: password,
-      })
-      .catch((err) => {
-        setError(err.response.data);
       });
-
-    const data = await res.data;
-
-    setAuth(data);
+      const data = res.data;
+      setAuth(data);
+      history("/");
+    } catch (err) {
+      setError(err.response.data);
+    }
   };
 
   return (
@@ -49,7 +42,7 @@ const Login = () => {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      bg={isDarkMode ? "gray.800" : "gray.50"}
+      bg={"gray.50"}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -60,49 +53,59 @@ const Login = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          bg={isDarkMode ? "gray.700" : "white"}
+          bg={"white"}
           boxShadow={"lg"}
           p={8}
         >
           <Stack spacing={4}>
             {auth.success ? null : (
-              <Alert status="error">
-                <Alert.Indicator />
+              <Box p={3} bg="red.100" color="red.800" borderRadius="md">
                 {auth.message}
-              </Alert>
+              </Box>
             )}
-            <Field id="username" label="username">
+            
+            <Box>
+              <Text mb={2} fontWeight="medium">Username</Text>
               {error?.success === false && (
-                <Alert status="error">
-                  <Alert.Indicator />
+                <Box p={3} bg="red.100" color="red.800" borderRadius="md" mb={2}>
                   {error?.message}
-                </Alert>
+                </Box>
               )}
-
               <Input
-                type="username"
+                id="username"
+                type="text"
                 value={username}
                 onChange={(evt) => {
                   setUsername(evt.target.value);
                 }}
               />
-            </Field>
-            <Field id="password" label="password">
+            </Box>
+            
+            <Box>
+              <Text mb={2} fontWeight="medium">Password</Text>
               <Input
+                id="password"
                 type="password"
                 value={password}
                 onChange={(evt) => {
                   setPassword(evt.target.value);
                 }}
               />
-            </Field>
+            </Box>
+            
             <Stack spacing={10}>
               <Stack
                 direction={{ base: "column", sm: "row" }}
                 align={"start"}
                 justify={"space-between"}
               >
-                <Checkbox>Remember me</Checkbox>
+                <Input 
+                  type="checkbox" 
+                  id="remember" 
+                  width="auto" 
+                  mr={2}
+                />
+                <Text>Remember me</Text>
                 <Link color={"blue.400"}>Forgot password?</Link>
               </Stack>
               <Button
@@ -111,7 +114,7 @@ const Login = () => {
                 _hover={{
                   bg: "blue.500",
                 }}
-                onClick={() => login().then(() => history("/"))}
+                onClick={login}
               >
                 Sign in
               </Button>

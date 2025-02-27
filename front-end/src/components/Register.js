@@ -3,20 +3,15 @@ import { useNavigate } from "react-router-dom";
 import {
   Flex,
   Box,
-  Field,
   Input,
   Stack,
   Link,
   Button,
   Heading,
-  Text,
+  Text
 } from "@chakra-ui/react";
-import { Alert } from "@chakra-ui/react";
-import { useTheme } from "next-themes";
 
 const Register = () => {
-  const { theme } = useTheme();
-  const isDarkMode = theme === "dark";
   const [userData, setUserData] = useState([]);
   const [error, setError] = useState("");
   const [username, setUsername] = useState("");
@@ -66,7 +61,7 @@ const Register = () => {
       minH={"100vh"}
       align={"center"}
       justify={"center"}
-      bg={isDarkMode ? "gray.800" : "gray.50"}
+      bg={"gray.50"}
     >
       <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
         <Stack align={"center"}>
@@ -79,29 +74,32 @@ const Register = () => {
         </Stack>
         <Box
           rounded={"lg"}
-          bg={isDarkMode ? "gray.800" : "gray.50"}
+          bg={"white"}
           boxShadow={"lg"}
           p={8}
         >
           <Stack spacing={4}>
             {error?.message === "" ? null : (
-              <Alert status="error">
-                <Alert.Indicator />
+              <Box p={3} bg="red.100" color="red.800" borderRadius="md" my={4}>
                 {error?.message}
-              </Alert>
+              </Box>
             )}
-            <Field id="username" label="Username" isRequired>
+
+            <Box>
+              <Text mb={2} fontWeight="medium">Username</Text>
               <Input
                 type="text"
+                placeholder="Stock Ticker"
                 value={username}
                 onChange={(evt) => {
-                  setUsername(evt.target.value);
+                  setUsername(evt.target.value.toUpperCase());
                   console.log(evt.target.value);
                 }}
               />
-            </Field>
+            </Box>
 
-            <Field id="email" label="Email address" isRequired>
+            <Box>
+              <Text mb={2} fontWeight="medium">Email address</Text>
               <Input
                 type="email"
                 value={email}
@@ -109,9 +107,10 @@ const Register = () => {
                   setEmail(evt.target.value);
                 }}
               />
-            </Field>
+            </Box>
 
-            <Field id="password" label="Password" isRequired>
+            <Box>
+              <Text mb={2} fontWeight="medium">Password</Text>
               <Input
                 type={showPassword ? "text" : "password"}
                 value={password}
@@ -120,11 +119,14 @@ const Register = () => {
                 }}
               />
               <Button
+                mt={2}
                 variant={"ghost"}
                 onClick={() => setShowPassword((showPassword) => !showPassword)}
-              ></Button>
-              <p>Password must be a minimum 6 characters long.</p>
-            </Field>
+              >
+                {showPassword ? "Hide" : "Show"}
+              </Button>
+              <Text fontSize="sm">Password must be a minimum 6 characters long.</Text>
+            </Box>
             <Stack spacing={10} pt={2}>
               <Button
                 loadingText="Submitting"
@@ -137,7 +139,7 @@ const Register = () => {
                 onClick={() => {
                   register();
                 }}
-                disabled={disableButton}
+                isDisabled={disableButton}
               >
                 Sign up
               </Button>
@@ -145,7 +147,7 @@ const Register = () => {
             <Stack pt={6}>
               <Text align={"center"}>
                 Already a user?{" "}
-                <Link href="/login" color={"blue.400"}>
+                <Link color={"blue.400"} href="/login">
                   Login
                 </Link>
               </Text>

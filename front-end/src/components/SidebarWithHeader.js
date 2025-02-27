@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Box, Flex, Icon, Link, Text } from "@chakra-ui/react";
+import { 
+  Box, 
+  Flex, 
+  Icon, 
+  Link, 
+  Text
+} from "@chakra-ui/react";
 import {
   FiHome,
   FiSettings,
   FiLogIn,
   FiLogOut,
   FiPlusCircle,
-  FiBell,
-  FiChevronDown,
+  FiUser
 } from "react-icons/fi";
 import * as fetchAPI from "../axios/getUser.js";
-import {
-  IconButton,
-  Avatar,
-  HStack,
-  VStack,
-  Menu,
-  MenuItem,
-  MenuContent,
-  MenuTrigger,
-} from "@chakra-ui/react";
 import axios from "axios";
-import { useTheme } from "next-themes";
 
 const SidebarWithHeader = () => {
-  const { theme } = useTheme();
-  const isDarkMode = theme === "dark";
   const [user, setUser] = useState([]);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await fetchAPI.getUser();
-      console.log(res.user);
-      setUser(res.user);
+      try {
+        const res = await fetchAPI.getUser();
+        console.log(res.user);
+        setUser(res.user);
+      } catch (err) {
+        console.error("Failed to fetch user:", err);
+      }
     };
     fetchUser();
   }, []);
@@ -45,7 +41,7 @@ const SidebarWithHeader = () => {
   };
 
   const LinkItems = [
-    { name: "Home", icon: FiHome },
+    { name: "Home", icon: FiHome, href: "/" },
     user?.length !== 0
       ? { name: "Logout", icon: FiLogOut, onClick: { logout }, href: "/login" }
       : { name: "Login", icon: FiLogIn, href: "/login" },
@@ -56,49 +52,14 @@ const SidebarWithHeader = () => {
       href: "/register",
     },
 
-    { name: "Settings", icon: FiSettings },
+    { name: "Settings", icon: FiSettings, href: "/settings" },
   ];
-
-  const NavItem = ({ icon, children, href, onClick }) => {
-    return (
-      <Link
-        href={href}
-        style={{ textDecoration: "none" }}
-        _focus={{ boxShadow: "none" }}
-      >
-        <Flex
-          align="center"
-          p="5"
-          mx="4"
-          borderRadius="lg"
-          role="group"
-          cursor="pointer"
-          _hover={{
-            bg: "cyan.400",
-            color: "white",
-          }}
-        >
-          {icon && (
-            <Icon
-              mr="4"
-              fontSize="16"
-              _groupHover={{
-                color: "white",
-              }}
-              as={icon}
-            />
-          )}
-          {children}
-        </Flex>
-      </Link>
-    );
-  };
 
   return (
     <div>
       <Box
         transition="3s ease"
-        bg={isDarkMode ? "gray.800" : "gray.50"}
+        bg={"gray.50"}
         borderRight="1px"
         w={{ base: "full", md: 60 }}
         pos="fixed"
@@ -122,58 +83,57 @@ const SidebarWithHeader = () => {
               </NavItem>
             )
         )}
-      </Box>
-
-      {user?.length !== 0 && (
-        <div
-          className="sidebar-profile"
-          style={{ position: "fixed", bottom: "0" }}
-        >
-          <HStack>
-            <IconButton
-              size="lg"
-              variant="ghost"
-              aria-label="open menu"
-              icon={<FiBell />}
-            />
-            <Flex>
-              <Menu>
-                <MenuTrigger
-                  asChild
-                  py={2}
-                  transition="all 0.3s"
-                  _focus={{ boxShadow: "none" }}
-                >
-                  <HStack>
-                    <Avatar size={"md"} src={user?.img} />
-                    <VStack
-                      display={{ base: "none", md: "flex" }}
-                      alignItems="flex-start"
-                      spacing="1px"
-                      ml="2"
-                    >
-                      <Text fontSize="md">{user?.username}</Text>
-                      <Text fontSize="xs" color="gray.600">
-                        Wallstreet Novice
-                      </Text>
-                    </VStack>
-                    <Box display={{ base: "none", md: "flex" }}>
-                      <FiChevronDown />
-                    </Box>
-                  </HStack>
-                </MenuTrigger>
-                <MenuContent>
-                  <MenuItem>Profile</MenuItem>
-                  <MenuItem>Settings</MenuItem>
-                  <MenuItem>Billing</MenuItem>
-                  <MenuItem>Sign out</MenuItem>
-                </MenuContent>
-              </Menu>
+        
+        {user?.length !== 0 && (
+          <Box position="fixed" bottom="5" left="5" right="5">
+            <Flex
+              align="center"
+              p="4"
+              borderRadius="md"
+              bg="gray.100"
+              boxShadow="sm"
+            >
+              <Icon as={FiUser} mr="3" />
+              <Text fontWeight="medium">{user?.username}</Text>
             </Flex>
-          </HStack>
-        </div>
-      )}
+          </Box>
+        )}
+      </Box>
     </div>
+  );
+};
+
+// Navigation item component
+const NavItem = ({ icon, children, href, onClick }) => {
+  return (
+    <Link
+      href={href}
+      style={{ textDecoration: "none" }}
+      _focus={{ boxShadow: "none" }}
+      onClick={onClick}
+    >
+      <Flex
+        align="center"
+        p="3"
+        mx="1"
+        borderRadius="md"
+        role="group"
+        cursor="pointer"
+        _hover={{
+          bg: "gray.100",
+          color: "black",
+        }}
+      >
+        {icon && (
+          <Icon
+            mr="3"
+            fontSize="16"
+            as={icon}
+          />
+        )}
+        {children}
+      </Flex>
+    </Link>
   );
 };
 

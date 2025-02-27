@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Stack } from "@chakra-ui/react";
-import { Select } from "@chakra-ui/react";
+import { Button, Stack, Box } from "@chakra-ui/react";
+import { 
+  Chart as ChartJS, 
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from "chart.js";
 
-//Custom function that takes in number of days X and goes back X number of days from present day (i.e. 15 days from 2022/07/31)
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
+
+// Custom function that takes in number of days X and goes back X number of days from present day
 const updateChartTimeFrame = (length = 0) => {
   if (length === 999) {
     return new Date(new Date().getFullYear(), 0, 1);
@@ -19,7 +39,6 @@ const updateChartTimeFrame = (length = 0) => {
 const TickerPriceChart = () => {
   const [chartData, setChartData] = useState([]);
   const { ticker } = useParams();
-
   const [startDate, setStartDate] = useState(186);
   const [period, setPeriod] = useState("w");
 
@@ -36,9 +55,14 @@ const TickerPriceChart = () => {
     }
 
     const fetchData = async () => {
-      let response = await fetch(URL);
-      response = await response.json();
-      return response;
+      try {
+        let response = await fetch(URL);
+        response = await response.json();
+        return response;
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+        return { data: [] };
+      }
     };
 
     fetchData().then((data) => {
@@ -56,7 +80,6 @@ const TickerPriceChart = () => {
     datasets: [
       {
         label: chartData.symbol?.toUpperCase(),
-
         data: chartData.data?.map((test) => test.close).reverse(),
         fill: true,
         backgroundColor: "rgba(75,192,192,0.2)",
@@ -65,10 +88,14 @@ const TickerPriceChart = () => {
     ],
   };
 
+  const handlePeriodChange = (e) => {
+    setPeriod(e.target.value);
+  };
+
   return (
     <>
       <div style={{ width: "30vw" }}>
-        <Stack spacing={4} direction="row" align="center">
+        <Stack spacing={4} direction="row" align="center" mb={4}>
           <Button colorScheme="teal" size="sm" onClick={() => setStartDate(5)}>
             5d
           </Button>
@@ -102,34 +129,31 @@ const TickerPriceChart = () => {
             Max
           </Button>
         </Stack>
-        <Stack width="125px" onClick={(event) => setPeriod(event.target.value)}>
-          <Select>
+        
+        <Box width="125px" mb={4}>
+          <select 
+            value={period}
+            onChange={handlePeriodChange}
+            style={{
+              width: '100%',
+              padding: '8px',
+              borderRadius: '5px',
+              border: '1px solid #ccc'
+            }}
+          >
             <option value="d">daily</option>
             <option value="w">weekly</option>
             <option value="m">monthly</option>
-          </Select>
-        </Stack>
+          </select>
+        </Box>
 
-        {/* 
-        //DOES NOT WORK:: Test Function to show stock gain/loss depending on timeline selection (i.e. AMD has gained 23% in the last month)
-        
-        {timelineGain && (
-          <Stat>
-            <StatLabel>Timeline </StatLabel>
-            <StatNumber>{timelineGain.toFixed(2)}</StatNumber>
-            <StatHelpText>
-              <Stat.UpIndicator type={timelineGain > 0 ? "increase" : "decrease"} />
-              {(
-                (timelineGain /
-                  chartData?.data[Object.keys(chartData["data"]).length - 1]
-                    .close) *
-                100
-              ).toFixed(2)}
-              %
-            </StatHelpText>
-          </Stat>
-        )} */}
-        <Line data={mappedData} />
+        {chartData.data && chartData.data.length > 0 ? (
+          <Line data={mappedData} />
+        ) : (
+          <Box p={4} textAlign="center">
+            Loading chart data...
+          </Box>
+        )}
       </div>
     </>
   );

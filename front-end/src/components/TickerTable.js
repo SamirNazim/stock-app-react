@@ -1,7 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Input, Stack, InputAddon, Button } from "@chakra-ui/react";
-import { Table, TableCaption } from "@chakra-ui/react";
+import { 
+  Input, 
+  Stack, 
+  Button, 
+  Box, 
+  Text,
+  Table
+} from "@chakra-ui/react";
 import axios from "axios";
 import TickerReadOnlyRow from "./TickerReadOnlyRow";
 import TickerEditableRow from "./TickerEditableRow";
@@ -16,16 +22,17 @@ const TickerTable = (props) => {
   const { user, setUser } = props;
 
   const setUserTickerTable = async () => {
-    const res = await axios
-      .post(
+    try {
+      const res = await axios.post(
         `http://localhost:8080/api/add?symbol=${symbol}&qty=${qty}&avgprice=${avgPrice}`,
         {
           withCredentials: true,
         }
-      )
-      .catch((err) => setUpdate(err.response));
-
-    setUpdate(res.data);
+      );
+      setUpdate(res.data);
+    } catch (err) {
+      setUpdate(err.response);
+    }
   };
 
   const handleEditClick = (event, contact) => {
@@ -35,37 +42,39 @@ const TickerTable = (props) => {
 
   useEffect(() => {
     getUser().then((data) => setUser(data.user));
-  }, [update]);
+  }, [update, setUser]);
 
   const saveTicker = async (event, symbol, setQty, setAvgPrice) => {
     event.preventDefault();
 
-    const res = await axios
-      .post(
+    try {
+      const res = await axios.post(
         `http://localhost:8080/api/update?symbol=${symbol}&qty=${setQty}&avgprice=${setAvgPrice}`
-      )
-      .catch((err) => setUpdate(err.response));
-
-    setEditRowId(null);
-    console.log(res.data);
-    setUpdate(res.data);
+      );
+      setEditRowId(null);
+      console.log(res.data);
+      setUpdate(res.data);
+    } catch (err) {
+      setUpdate(err.response);
+    }
   };
 
   const deleteTicker = async (event, id) => {
     event.preventDefault();
 
-    const res = await axios
-      .delete(`http://localhost:8080/api/delete/${id}`)
-      .catch((err) => setUpdate(err.response));
-
-    setEditRowId(null);
-    setUpdate(res.data);
+    try {
+      const res = await axios.delete(`http://localhost:8080/api/delete/${id}`);
+      setEditRowId(null);
+      setUpdate(res.data);
+    } catch (err) {
+      setUpdate(err.response);
+    }
   };
 
   return (
     <>
-      <Stack spacing={3}>
-        <InputAddon children="Symbol" />
+      <Stack spacing={3} mb={4}>
+        <Text fontWeight="medium">Symbol</Text>
         <Input
           type="text"
           placeholder="Stock Ticker"
@@ -74,7 +83,7 @@ const TickerTable = (props) => {
             setSymbol(evt.target.value.toUpperCase());
           }}
         />
-        <InputAddon children="Quantity" />
+        <Text fontWeight="medium">Quantity</Text>
         <Input
           type="number"
           placeholder="Number of Shares"
@@ -83,7 +92,7 @@ const TickerTable = (props) => {
             setQty(evt.target.value);
           }}
         />
-        <InputAddon children="AvgPrice" />
+        <Text fontWeight="medium">Average Price</Text>
         <Input
           type="number"
           placeholder="Average Price"
@@ -97,43 +106,50 @@ const TickerTable = (props) => {
         </Button>
       </Stack>
 
-      {update?.status === false ? <h1>{update?.message}</h1> : ""}
+      {update?.status === false ? (
+        <Box p={3} bg="red.100" color="red.800" borderRadius="md" my={4}>
+          {update?.message}
+        </Box>
+      ) : null}
 
       {user?.username && (
-        <Table.Root>
-          <Table variant="striped" colorScheme="teal">
-            <TableCaption>{user?.username}'s Portfolio Holdings</TableCaption>
-            <Table.Row>
-              <Table.ColumnHeader>Symbol</Table.ColumnHeader>
-              <Table.ColumnHeader>Quantity</Table.ColumnHeader>
-              <Table.ColumnHeader>Average Price per Share</Table.ColumnHeader>
-              <Table.ColumnHeader>Current Price</Table.ColumnHeader>
-              <Table.ColumnHeader>Daily Gain</Table.ColumnHeader>
-              <Table.ColumnHeader>Total Gain</Table.ColumnHeader>
-              <Table.ColumnHeader>Market Value</Table.ColumnHeader>
-            </Table.Row>
-            <Table.Body>
-              {user?.data.map((data) => (
-                <>
+        <Box overflowX="auto" mt={4}>
+          <table style={{width: "100%", borderCollapse: "collapse"}}>
+            <thead>
+              <tr>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Symbol</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Quantity</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Average Price</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Current Price</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Daily Gain</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Total Gain</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Market Value</th>
+                <th style={{padding: "10px", textAlign: "left", borderBottom: "1px solid #ccc"}}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {user?.data && user.data.map((data) => (
+                <React.Fragment key={data._id}>
                   {editRowId === data._id ? (
                     <TickerEditableRow
                       data={data}
                       saveTicker={saveTicker}
                       deleteTicker={deleteTicker}
-                      key={data._id}
                     />
                   ) : (
                     <TickerReadOnlyRow
                       data={data}
                       handleEditClick={handleEditClick}
-                      key={data._id}
                     />
                   )}
-                </>
+                </React.Fragment>
               ))}
-            </Table.Body>
-          </Table>
-        </Table.Root>
+            </tbody>
+          </table>
+          <Text mt={2} fontStyle="italic" textAlign="center">
+            {user?.username}'s Portfolio Holdings
+          </Text>
+        </Box>
       )}
     </>
   );

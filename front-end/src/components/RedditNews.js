@@ -10,7 +10,7 @@ const RedditNews = (prop) => {
   const [readMore, setReadMore] = useState(3);
 
   useEffect(() => {
-    const URL = `https://www.googleapis.com/customsearch/v1?key=TOKEN&q=${prop.ticker}%20stock%20site:reddit.com%20after:2021`;
+    const URL = `https://www.googleapis.com/customsearch/v1?key=AIzaSyDtGOqrfZwmA62nRtILP9xi6vmovU3DF3U&cx=017576662512468239146:omuauf_lfve&cx=e9b96c9e1b2c18b7f&q=${prop.ticker}%20stock%20site:reddit.com%20after:2021`;
     fetch(URL)
       .then((response) => response.json())
       .then((json) => {
